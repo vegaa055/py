@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
+import customtkinter  # <- import the CustomTkinter module
 from PIL import Image
 import img2pdf
 
@@ -23,7 +24,7 @@ def select_output_folder():
     global output_dir
     output_dir = filedialog.askdirectory(title="Select Output Folder")
     if output_dir:
-        folder_label.config(text=f"Output folder selected.")
+        folder_label.config(text="Output folder selected.")
     else:
         folder_label.config(text="No folder selected.")
 
@@ -69,40 +70,42 @@ def convert_tiffs_to_pdfs():
 # GUI Setup
 root = tk.Tk()
 root.title("TIFF to PDF Converter")
-root.geometry("400x400")
+root.configure(bg="#3d3d3d")
+root.geometry("450x180")
 root.resizable(False, False)
 
-# Widgets
-tk.Label(root, text="Base Filename (e.g., invoice, scan):").pack(pady=(20, 5))
-base_name_entry = tk.Entry(root, width=30)
-base_name_entry.pack()
+# Styling function for buttons
+def style_button(button):
+    button.config(font=("Arial", 10), bg="#039dfc", fg="white", activebackground="#0284d4", width=20)
 
-select_tiff_button = tk.Button(root, text="Select TIFF Files", command=select_files)
-select_tiff_button.pack(pady=20, padx=10)
-select_tiff_button.config(font=("Arial", 12))
-select_tiff_button.config(bg="#4CAF50", fg="white", activebackground="#45a049")
+# Grid Layout
+tk.Label(root, text="Base Filename", bg="#3d3d3d", fg="white").grid(row=0, column=0, columnspan=1,padx=(10,5), pady=(20, 5), sticky="w")
+# base_name_entry = tk.Entry(root, width=30)
+base_name_entry = customtkinter.CTkEntry(root, width=180)
+base_name_entry.grid(row=0, column=1, columnspan=1, padx=(5,10),pady=(20, 5), sticky="w")
 
-files_label = tk.Label(root, text="No files selected.")
-files_label.pack()
+select_tiff_button = customtkinter.CTkButton(root, text="Select TIFF Files",corner_radius=10, command=select_files)
+# style_button(select_tiff_button)
+select_tiff_button.grid(row=0, column=2, pady=(10,0), sticky="w")
 
+files_label = tk.Label(root, text="No files selected.", fg="white", bg="#3d3d3d")
+files_label.grid(row=1, column=2, padx=2, pady=(0,2), sticky="ew")
 
-select_output_button = tk.Button(root, text="Select Output Folder", command=select_output_folder)
-select_output_button.pack(pady=20, padx=10)
-select_output_button.config(font=("Arial", 12))
-select_output_button.config(bg="#4CAF50", fg="white", activebackground="#45a049")
+select_output_button = customtkinter.CTkButton(root, text="Select Output Folder", corner_radius=10, command=select_output_folder)
+# style_button(select_output_button)
+select_output_button.grid(row=2, column=2, sticky="w")
 
-folder_label = tk.Label(root, text="No folder selected.")
-folder_label.pack()
+folder_label = tk.Label(root, text="No folder selected.", fg="white", bg="#3d3d3d")
+folder_label.grid(row=3, column=2, padx=20, pady=(0,2), sticky="ew")
 
-convert_button = tk.Button(root, text="Convert", command=convert_tiffs_to_pdfs)
-convert_button.pack(pady=20, padx=10)
-convert_button.config(font=("Arial", 12))
-convert_button.config(bg="#4CAF50", fg="white", activebackground="#45a049")
-progress_bar = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate")
-progress_bar.pack(pady=10)
+convert_button = customtkinter.CTkButton(root, text="Convert", corner_radius=10, command=convert_tiffs_to_pdfs)
+# style_button(convert_button)
+convert_button.grid(row=4, column=2,sticky="w")
 
-status_label = tk.Label(root, text="")
-status_label.pack()
+progress_bar = ttk.Progressbar(root, orient="horizontal", length=275, mode="determinate")
+progress_bar.grid(row=4, column=0, columnspan=2, pady=2, padx=(10,5), sticky="w")
 
-# Run GUI
+status_label = tk.Label(root, text="", bg="#3d3d3d")
+status_label.grid(row=2, column=0, columnspan=2, padx=20, sticky="w")
+
 root.mainloop()
